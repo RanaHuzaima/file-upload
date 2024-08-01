@@ -1,5 +1,6 @@
 import React from 'react';
 import { useDrag, useDrop } from 'react-dnd';
+import { RxCross2 } from 'react-icons/rx';
 
 interface ImageItemProps {
   file: File;
@@ -26,15 +27,14 @@ const ImageItem: React.FC<ImageItemProps> = ({ file, preview, index, moveImage, 
   });
 
   return (
-    <div ref={(node) => ref(drop(node))} className="relative flex flex-col items-center">
+    <div ref={(node) => ref(drop(node))} className="relative flex flex-col items-center p-2 border rounded-lg">
       <button
-        className="absolute top-0 right-0 bg-red-500 text-white rounded-full p-1"
+        className="absolute top-2 right-2 bg-[#3A5BFF26] text-[#3A5BFF] rounded-full p-[2px]"
         onClick={() => removeImage(index)}
       >
-        {/* &times; */}
+       <RxCross2 />
       </button>
-      <img src={preview} alt={file.name} className="w-32 h-32 object-cover mb-2" />
-      <span>{file.name}</span>
+      <img src={preview} alt={file.name} className="w-32 h-32 object-cover mb-2 rounded-lg" />
     </div>
   );
 };

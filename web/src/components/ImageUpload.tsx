@@ -2,18 +2,19 @@ import React, { useState, useCallback } from 'react';
 import axios from 'axios';
 import { useDropzone } from 'react-dropzone';
 import { DndProvider } from 'react-dnd';
-import ImageItem from './ImageItem';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import { Input } from './ui/input';
+import ImageItem from './ImageItem';
 import { Button } from './ui/button';
 
 const ImageUpload: React.FC = () => {
   const [files, setFiles] = useState<File[]>([]);
   const [previews, setPreviews] = useState<string[]>([]);
-  const [productName, setProductName] = useState('');
-  const [des, setDes] = useState('');
 
   const handleDrop = useCallback((acceptedFiles: File[]) => {
+    if (files.length + acceptedFiles.length > 10) {
+      alert('You can only upload a maximum of 10 images.');
+      return;
+    }
     const newFiles = [...files, ...acceptedFiles];
     setFiles(newFiles);
     const newPreviews = newFiles.map(file => URL.createObjectURL(file));
@@ -64,15 +65,13 @@ const ImageUpload: React.FC = () => {
       const base64Images = await Promise.all(files.map(convertToBase64));
 
       const payload = {
-        productName,
-        des,
-        imagesBlob: files.map((file, index) => ({
+        imagesBlob: files.map((_, index) => ({
           order: index + 1,
           data: base64Images[index],
         })),
       };
 
-      const response = await axios.post('http://localhost:4400/upload', payload, {
+      const response = await axios.post('http://localhost:3000/upload', payload, {
         headers: {
           'Content-Type': 'application/json',
         },
@@ -88,46 +87,30 @@ const ImageUpload: React.FC = () => {
     onDrop: handleDrop,
     noClick: true,
     noKeyboard: true,
+    accept: {
+      'image/jpeg': [],
+      'image/png': []
+    },
   });
 
   return (
     <DndProvider backend={HTML5Backend}>
       <div className="max-w-lg mx-auto p-4 bg-white shadow-md rounded-md">
-        <h1 className="text-2xl font-bold mb-4">Upload Images</h1>
-        <Input 
-          type="text" 
-          value={productName} 
-          onChange={(e) => setProductName(e.target.value)} 
-          placeholder="Product Name"
-          className="mb-4 p-2 border rounded w-full"
-        />
-        <Input 
-          type="text" 
-          value={des} 
-          onChange={(e) => setDes(e.target.value)} 
-          placeholder="Description"
-          className="mb-4 p-2 border rounded w-full"
-        />
-        <div {...getRootProps()} className="mb-4 border-dashed border-2 border-gray-400 p-4 rounded-md text-center">
+        <h1 className="text-lg font-medium mb-4">Media</h1>
+        <span className="text-sm font-medium mb-1 text-[#777980]">Photo</span>
+        <div {...getRootProps()} className="mb-4 border-dashed border-2 border-gray-400 rounded-lg text-center py-20 px-10">
           <input {...getInputProps()} />
-          <p>Drag & drop some files here, or click the plus button to select files</p>
+          <p className='text-[#858D9D] text-sm my-2'>Drag and drop images here, or click "Add Image" to select files</p>
           <Button 
             onClick={open} 
-            className="mt-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
+            className="mt-2 px-4 py-2 bg-[#3A5BFF26] text-[#3A5BFF] rounded-lg hover:bg-[#3A5BFF26] transition-colors"
           >
-            +
+            Add Image
           </Button>
         </div>
-        <Button 
-          onClick={handleUpload} 
-          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
-        >
-          Upload
-        </Button>
         {files.length > 0 && (
           <div className="mt-4">
-            <h2 className="text-xl font-semibold mb-2">Selected Images:</h2>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-3 gap-4">
               {files.map((file, index) => (
                 <ImageItem 
                   key={index} 
