@@ -98,7 +98,7 @@ const ImageUpload: React.FC = () => {
       <div className="max-w-lg mx-auto p-4 bg-white shadow-md rounded-md">
         <h1 className="text-lg font-medium mb-4">Media</h1>
         <span className="text-sm font-medium mb-1 text-[#777980]">Photo</span>
-        <div {...getRootProps()} className="mb-4 border-dashed border-2 border-gray-400 rounded-lg text-center py-20 px-10">
+        <div {...getRootProps()} className="mb-4 border-dashed border-2 border-[#E0E2E7] rounded-lg text-center py-20 px-10 bg-[#F9F9FC]">
           <input {...getInputProps()} />
           <p className='text-[#858D9D] text-sm my-2'>Drag and drop images here, or click "Add Image" to select files</p>
           <Button 
