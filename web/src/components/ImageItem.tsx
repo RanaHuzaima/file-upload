@@ -3,7 +3,7 @@ import { useDrag, useDrop } from 'react-dnd';
 import { RxCross2 } from 'react-icons/rx';
 
 interface ImageItemProps {
-  file: File;
+  file?: File;
   preview: string;
   index: number;
   moveImage: (dragIndex: number, hoverIndex: number) => void;
@@ -34,7 +34,7 @@ const ImageItem: React.FC<ImageItemProps> = ({ file, preview, index, moveImage, 
       >
        <RxCross2 />
       </button>
-      <img src={preview} alt={file.name} className="w-32 h-32 object-cover mb-2 rounded-lg" />
+      <img src={preview} className="w-32 h-32 object-cover mb-2 rounded-lg" />
     </div>
   );
 };
